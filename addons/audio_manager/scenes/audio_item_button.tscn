@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://6txaekfoxnvb"]
+
+[node name="AudioItemButton" type="Button"]
+text = "AUDIO 1"
+
+[connection signal="button_down" from="." to="." method="_on_button_down"]

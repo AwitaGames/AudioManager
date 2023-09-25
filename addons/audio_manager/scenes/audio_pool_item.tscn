@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://dux31y2fvvtf8"]
+
+[ext_resource type="Script" path="res://addons/audio_manager/scripts/2D_audio_pool_item.gd" id="1_radcr"]
+
+[node name="audio_pool_item" type="Node" node_paths=PackedStringArray("player_normal", "player_2D", "player_3D", "timer")]
+script = ExtResource("1_radcr")
+player_normal = NodePath("AudioStreamPlayer")
+player_2D = NodePath("AudioStreamPlayer2D")
+player_3D = NodePath("AudioStreamPlayer3D")
+timer = NodePath("Timer")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.001
+one_shot = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
