@@ -18,7 +18,6 @@ func _make_visible(visible):
 	if _audiomanager_main:
 		_audiomanager_main.visible = visible
 		if visible:
-			print(_audiomanager_main)
 			_audiomanager_main.on_show_audiomanager_window()
 	
 

@@ -96,8 +96,6 @@ func _on_delete_selected_file_button_down():
 	refresh_from_selected()
 
 func _on_file_dialog_files_selected(paths):
-	print(paths)
-	
 	for p in paths: selected_audio_item.audio_files.append(load(p))
 
 	refresh_from_selected()
