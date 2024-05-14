@@ -1,6 +1,6 @@
 @tool
-extends EditorPlugin
+extends Node
 
 
 func refresh_folders():
-	get_editor_interface().get_resource_filesystem().scan()
+	EditorInterface.get_resource_filesystem().scan()

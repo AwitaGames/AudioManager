@@ -19,21 +19,27 @@ func _enter_tree():
 	
 func play_sound(audio_name:String, delay: float = 0.0):
 	var audio_item = get_audio_item(audio_name)	
-	if audio_item == null: return
+	if audio_item == null: 
+		printerr("[AudioManager] audio_item is null")
+		return
 
 	var audio_pool_item = get_free_pool_item()
 	audio_pool_item.play_audio(audio_item, delay)
 
 func play_sound2D(audio_name:String, world_pos: Vector2, delay: float = 0.0):
 	var audio_item = get_audio_item(audio_name)
-	if audio_item == null: return
+	if audio_item == null: 
+		printerr("[AudioManager] audio_item is null")
+		return
 	
 	var audio_pool_item = get_free_pool_item()
 	audio_pool_item.play_audio2D(audio_item, world_pos, delay)
 
 func play_sound3D(audio_name:String, world_pos: Vector3, delay: float = 0.0):
 	var audio_item = get_audio_item(audio_name)
-	if audio_item == null: return
+	if audio_item == null: 
+		printerr("[AudioManager] audio_item is null")
+		return
 	
 	var audio_pool_item = get_free_pool_item()
 	audio_pool_item.play_audio3D(audio_item, world_pos, delay)
@@ -45,6 +51,7 @@ static func get_free_pool_item()->AudioPoolItem2D:
 	return create_pool_item()
 	
 static func create_pool_item()->AudioPoolItem2D:
+	print("creating pool item")
 	var new_pool = pool_item_scene.instantiate() as AudioPoolItem2D
 	instance.add_child(new_pool)
 	audio_pool.append(new_pool)
@@ -75,10 +82,10 @@ static func get_all_audio_settings() -> Array[AudioItem]:
 	return return_list
 
 static func _get_all_files(path: String, file_ext := "", files:Array[String] = []) -> Array[String]: #Loops through an entire directory recursively, and pulls the full file paths
-
-	if !DirAccess.dir_exists_absolute(path):
-		DirAccess.make_dir_absolute(path)
-		AudioManagerTools.refresh_folders()
+	if Engine.is_editor_hint():
+		if !DirAccess.dir_exists_absolute(path):
+			DirAccess.make_dir_absolute(path)
+			AudioManagerTools.refresh_folders()
 
 	var dir = DirAccess.open(path)
 	

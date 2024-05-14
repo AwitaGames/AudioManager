@@ -35,6 +35,7 @@ func setup_audio(audio_stream, audio_item:AudioItem, delay: float):
 	is_busy = true
 		
 	timer.wait_time = delay + 0.01
+	timer.stop()
 	
 	var random_index = randi_range(0, len(audio_item.audio_files)-1)
 	audio_stream.stream = audio_item.audio_files[random_index]
@@ -44,7 +45,13 @@ func setup_audio(audio_stream, audio_item:AudioItem, delay: float):
 		audio_stream.pitch_scale += randf_range(-audio_item.pitch_random, audio_item.pitch_random )
 
 	var audio_length:float = audio_stream.stream.get_length()
-
+	
+	var finish_timer = get_tree().create_timer(audio_length + 0.5)
+	
+	finish_timer.timeout.connect(func():
+		is_busy = false
+	)
+	
 	if delay > 0.0:
 		timer.start()
 	else:
@@ -52,4 +59,3 @@ func setup_audio(audio_stream, audio_item:AudioItem, delay: float):
 
 func _on_timer_timeout():
 	current_player.play()
-	is_busy = false
