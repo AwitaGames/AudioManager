@@ -9,4 +9,3 @@ class_name AudioItem
 @export var audio_files: Array[AudioStream]
 
 @export var name:String = ""
-@export var file_path:String = ""

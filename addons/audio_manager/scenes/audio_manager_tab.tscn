@@ -1,10 +1,58 @@
-[gd_scene load_steps=3 format=3 uid="uid://cn4gtgklteei7"]
+[gd_scene load_steps=14 format=3 uid="uid://cn4gtgklteei7"]
 
 [ext_resource type="Script" path="res://addons/audio_manager/scripts/audio_manager_tab.gd" id="1_f7ndv"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wiyku"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s1vw5"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.278675, 0.312117, 0.374194, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_fe6xw"]
+font_size = 25
+outline_size = 2
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6igbe"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_uf12a"]
+font_size = 18
+outline_size = 2
+
+[sub_resource type="LabelSettings" id="LabelSettings_k8ni3"]
+font_size = 18
+
+[sub_resource type="LabelSettings" id="LabelSettings_r37p2"]
+font_size = 12
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8tlml"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_8yqbl"]
+font_size = 18
+outline_size = 2
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_oxyw2"]
+content_margin_left = 10.0
+content_margin_top = 0.0
+content_margin_right = 10.0
+content_margin_bottom = 0.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_qb7l2"]
+font_size = 18
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ouxig"]
 
-[node name="AudioManagerTab" type="Control" node_paths=PackedStringArray("button_list_root", "create_input", "settings_root", "file_name_field", "volume_slider", "pitch_slider", "random_pitch_slider", "file_list", "add_file_dialog")]
+[node name="AudioManagerTab" type="Control" node_paths=PackedStringArray("button_list_root", "create_input", "default_folder_path", "settings_root", "file_name_field", "volume_slider", "pitch_slider", "random_pitch_slider", "file_list", "add_file_dialog", "select_folder_dialog")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,82 +62,182 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_f7ndv")
-button_list_root = NodePath("VBoxContainer/HBoxContainer/AudioList/VBoxContainer/ScrollContainer/AudioItemList")
-create_input = NodePath("VBoxContainer/HBoxContainer/AudioList/VBoxContainer/HBoxContainer/CreateLineEdit")
-settings_root = NodePath("VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot")
-file_name_field = NodePath("VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer/FileName")
-volume_slider = NodePath("VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer/VolumeSlider")
-pitch_slider = NodePath("VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer/PitchSlider")
-random_pitch_slider = NodePath("VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer/RandomPitchSlider")
-file_list = NodePath("VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer2/VScrollBar/ItemList")
+button_list_root = NodePath("ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/AudioItemListBlock/ScrollContainer/AudioItemList")
+create_input = NodePath("ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/NewAudioItemBlock/HBoxContainer/CreateLineEdit")
+default_folder_path = NodePath("ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/WorkingFolderBlock/HBoxContainer2/DefaultFolderPath")
+settings_root = NodePath("ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot")
+file_name_field = NodePath("ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/FileName")
+volume_slider = NodePath("ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/VolumeSlider")
+pitch_slider = NodePath("ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/PitchSlider")
+random_pitch_slider = NodePath("ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/RandomPitchSlider")
+file_list = NodePath("ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer2/VBoxContainer2/VScrollBar/ItemList")
 add_file_dialog = NodePath("FileDialog")
+select_folder_dialog = NodePath("FolderDialog")
 
 [node name="FileDialog" type="FileDialog" parent="."]
 title = "Open File(s)"
-ok_button_text = "Abrir"
+ok_button_text = "Open"
 file_mode = 1
 filters = PackedStringArray("*.mp3", "*.ogg", "*.wav")
 
+[node name="FolderDialog" type="FileDialog" parent="."]
+auto_translate_mode = 1
+title = "Open a Directory"
+size = Vector2i(207, 175)
+ok_button_text = "Select Current Folder"
+file_mode = 2
+
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="ROOT" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_wiyku")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ROOT"]
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+[node name="TITLE" type="PanelContainer" parent="ROOT/VBoxContainer"]
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_s1vw5")
 
-[node name="HBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="VBoxContainer/MarginContainer/HBoxContainer"]
+[node name="TitleLabel" type="Label" parent="ROOT/VBoxContainer/TITLE"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 25
 text = "AUDIO MANAGER"
+label_settings = SubResource("LabelSettings_fe6xw")
+horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="TAB" type="PanelContainer" parent="ROOT/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_6igbe")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ROOT/VBoxContainer/TAB"]
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.0
 
-[node name="AudioList" type="PanelContainer" parent="VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(300, 0)
+[node name="ItemManagerRoot" type="VBoxContainer" parent="ROOT/VBoxContainer/TAB/HBoxContainer"]
+custom_minimum_size = Vector2(450, 0)
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/AudioList"]
+[node name="Title" type="PanelContainer" parent="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_s1vw5")
+
+[node name="Label" type="Label" parent="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/Title"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "AUDIO ITEMS"
+label_settings = SubResource("LabelSettings_uf12a")
+horizontal_alignment = 1
+
+[node name="WorkingFolderBlock" type="VBoxContainer" parent="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/AudioList/VBoxContainer"]
+[node name="Label3" type="Label" parent="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/WorkingFolderBlock"]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-text = "AUDIO ITEM LIST"
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "Working folder"
+label_settings = SubResource("LabelSettings_k8ni3")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/AudioList/VBoxContainer"]
+[node name="Label4" type="Label" parent="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/WorkingFolderBlock"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Select a folder to create new items. Default: res://sounds"
+label_settings = SubResource("LabelSettings_r37p2")
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/WorkingFolderBlock"]
 layout_mode = 2
 
-[node name="CreateLineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer/AudioList/VBoxContainer/HBoxContainer"]
+[node name="DefaultFolderPath" type="LineEdit" parent="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/WorkingFolderBlock/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+editable = false
+
+[node name="ChangeFolderPath" type="Button" parent="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/WorkingFolderBlock/HBoxContainer2"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Change"
+
+[node name="NewAudioItemBlock" type="VBoxContainer" parent="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/NewAudioItemBlock"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "New AudioItem"
+label_settings = SubResource("LabelSettings_k8ni3")
+
+[node name="Label4" type="Label" parent="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/NewAudioItemBlock"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Choose a name/tag. Only letters, numbers and underscore."
+label_settings = SubResource("LabelSettings_r37p2")
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/NewAudioItemBlock"]
+layout_mode = 2
+
+[node name="CreateLineEdit" type="LineEdit" parent="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/NewAudioItemBlock/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="CreateFileButton" type="Button" parent="VBoxContainer/HBoxContainer/AudioList/VBoxContainer/HBoxContainer"]
+[node name="CreateFileButton" type="Button" parent="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/NewAudioItemBlock/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-text = "Create new"
+text = "Create"
 
-[node name="Filter" type="LineEdit" parent="VBoxContainer/HBoxContainer/AudioList/VBoxContainer"]
+[node name="AudioItemListBlock" type="VBoxContainer" parent="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/AudioItemListBlock"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "AudioItem list"
+label_settings = SubResource("LabelSettings_k8ni3")
+
+[node name="Label5" type="Label" parent="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/AudioItemListBlock"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Loaded from all the project folders"
+label_settings = SubResource("LabelSettings_r37p2")
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="Filter" type="LineEdit" parent="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/AudioItemListBlock"]
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Filter..."
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainer/AudioList/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/AudioItemListBlock"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="AudioItemList" type="ItemList" parent="VBoxContainer/HBoxContainer/AudioList/VBoxContainer/ScrollContainer"]
+[node name="AudioItemList" type="ItemList" parent="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/AudioItemListBlock/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -97,105 +245,129 @@ allow_reselect = true
 auto_height = true
 fixed_icon_size = Vector2i(15, 15)
 
-[node name="AudioEditor" type="PanelContainer" parent="VBoxContainer/HBoxContainer"]
+[node name="AudioEditor" type="PanelContainer" parent="ROOT/VBoxContainer/TAB/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_8tlml")
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer/AudioEditor"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor"]
 layout_mode = 2
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 15
-theme_override_constants/margin_right = 15
-theme_override_constants/margin_bottom = 15
 
-[node name="SettingsRoot" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/AudioEditor/MarginContainer"]
-visible = false
+[node name="Title" type="PanelContainer" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 25
+theme_override_styles/panel = SubResource("StyleBoxFlat_s1vw5")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot"]
+[node name="Label" type="Label" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/Title"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "SELECTED AUDIO ITEM"
+label_settings = SubResource("LabelSettings_8yqbl")
+horizontal_alignment = 1
+
+[node name="SettingsRoot" type="HBoxContainer" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_oxyw2")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.66
 
-[node name="Label4" type="Label" parent="VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer"]
+[node name="Label4" type="Label" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
 layout_mode = 2
-text = "Audio Item name/tag"
+text = "AudioItem name/tag"
+label_settings = SubResource("LabelSettings_qb7l2")
 
-[node name="Label5" type="Label" parent="VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer"]
+[node name="Label5" type="Label" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Only letters, numbers and underscore. Press enter to save"
 
-[node name="FileName" type="LineEdit" parent="VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer"]
+[node name="FileName" type="LineEdit" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
 layout_mode = 2
 max_length = 20
 caret_blink = true
 
-[node name="DeleteItemButton" type="Button" parent="VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer"]
-layout_mode = 2
-text = "Delete Item"
-
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 15
 theme_override_styles/separator = SubResource("StyleBoxEmpty_ouxig")
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer"]
+[node name="Label" type="Label" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
 layout_mode = 2
 text = "Volume"
 
-[node name="VolumeSlider" type="HSlider" parent="VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer"]
+[node name="VolumeSlider" type="HSlider" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
 layout_mode = 2
 max_value = 1.0
 step = 0.01
 
-[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer"]
+[node name="Label2" type="Label" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
 layout_mode = 2
 text = "Default Pitch"
 
-[node name="PitchSlider" type="HSlider" parent="VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer"]
+[node name="PitchSlider" type="HSlider" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
 layout_mode = 2
 max_value = 1.0
 step = 0.01
 
-[node name="Label3" type="Label" parent="VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer"]
+[node name="Label3" type="Label" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
 layout_mode = 2
 text = "Random Pitch"
 
-[node name="RandomPitchSlider" type="HSlider" parent="VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer"]
+[node name="RandomPitchSlider" type="HSlider" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
 layout_mode = 2
 max_value = 1.0
 step = 0.01
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot"]
+[node name="Label6" type="Label" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+text = "Actions"
+label_settings = SubResource("LabelSettings_qb7l2")
+
+[node name="DeleteItemButton" type="Button" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+text = "Delete Item"
+
+[node name="PanelContainer2" type="PanelContainer" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_oxyw2")
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer2"]
+[node name="Label" type="Label" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer2/VBoxContainer2"]
 layout_mode = 2
 text = "Sound files"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer2/VBoxContainer2"]
 layout_mode = 2
 
-[node name="DeleteSelectedFile" type="Button" parent="VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer2/HBoxContainer"]
+[node name="DeleteSelectedFile" type="Button" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer2/VBoxContainer2/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 8
 text = "Remove selected"
 
-[node name="AddFile" type="Button" parent="VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer2/HBoxContainer"]
+[node name="AddFile" type="Button" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer2/VBoxContainer2/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 8
 text = "Add files"
 
-[node name="VScrollBar" type="ScrollContainer" parent="VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer2"]
+[node name="VScrollBar" type="ScrollContainer" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer2/VBoxContainer2"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ItemList" type="ItemList" parent="VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer2/VScrollBar"]
+[node name="ItemList" type="ItemList" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer2/VBoxContainer2/VScrollBar"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -209,13 +381,15 @@ item_3/text = "asd"
 item_4/text = "asd"
 
 [connection signal="files_selected" from="FileDialog" to="." method="_on_file_dialog_files_selected"]
-[connection signal="button_down" from="VBoxContainer/HBoxContainer/AudioList/VBoxContainer/HBoxContainer/CreateFileButton" to="." method="_on_create_file_button_button_down"]
-[connection signal="text_changed" from="VBoxContainer/HBoxContainer/AudioList/VBoxContainer/Filter" to="." method="_on_filter_text_changed"]
-[connection signal="item_selected" from="VBoxContainer/HBoxContainer/AudioList/VBoxContainer/ScrollContainer/AudioItemList" to="." method="_on_audio_item_list_item_selected"]
-[connection signal="text_submitted" from="VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer/FileName" to="." method="_on_file_name_text_submitted"]
-[connection signal="button_down" from="VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer/DeleteItemButton" to="." method="_on_button_button_down"]
-[connection signal="value_changed" from="VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer/VolumeSlider" to="." method="_on_volume_slider_value_changed"]
-[connection signal="value_changed" from="VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer/PitchSlider" to="." method="_on_pitch_slider_value_changed"]
-[connection signal="value_changed" from="VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer/RandomPitchSlider" to="." method="_on_random_pitch_slider_value_changed"]
-[connection signal="button_down" from="VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer2/HBoxContainer/DeleteSelectedFile" to="." method="_on_delete_selected_file_button_down"]
-[connection signal="button_down" from="VBoxContainer/HBoxContainer/AudioEditor/MarginContainer/SettingsRoot/VBoxContainer2/HBoxContainer/AddFile" to="." method="_on_add_file_button_down"]
+[connection signal="dir_selected" from="FolderDialog" to="." method="_on_folder_dialog_dir_selected"]
+[connection signal="pressed" from="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/WorkingFolderBlock/HBoxContainer2/ChangeFolderPath" to="." method="_on_change_folder_path_pressed"]
+[connection signal="button_down" from="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/NewAudioItemBlock/HBoxContainer/CreateFileButton" to="." method="_on_create_file_button_button_down"]
+[connection signal="text_changed" from="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/AudioItemListBlock/Filter" to="." method="_on_filter_text_changed"]
+[connection signal="item_selected" from="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/AudioItemListBlock/ScrollContainer/AudioItemList" to="." method="_on_audio_item_list_item_selected"]
+[connection signal="text_submitted" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/FileName" to="." method="_on_file_name_text_submitted"]
+[connection signal="value_changed" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/VolumeSlider" to="." method="_on_volume_slider_value_changed"]
+[connection signal="value_changed" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/PitchSlider" to="." method="_on_pitch_slider_value_changed"]
+[connection signal="value_changed" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/RandomPitchSlider" to="." method="_on_random_pitch_slider_value_changed"]
+[connection signal="button_down" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/DeleteItemButton" to="." method="_on_button_button_down"]
+[connection signal="button_down" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer2/VBoxContainer2/HBoxContainer/DeleteSelectedFile" to="." method="_on_delete_selected_file_button_down"]
+[connection signal="button_down" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer2/VBoxContainer2/HBoxContainer/AddFile" to="." method="_on_add_file_button_down"]
