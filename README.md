@@ -1,7 +1,7 @@
 # AudioManager
  A simple audio manager for Godot Engine
 
- ### Usage resume
+### Usage resume
 1. Install the addon and enable it.
 2. Inside the AudioManager tab, create and configure audio resources
 3. Use the functions of the AudioManager to play the audio resources
@@ -43,3 +43,6 @@ AudioManager.play_sound("your_audio_resource_name", 1.5)
 AudioManager.play_sound2D("your_audio_resource_name", Vector2(10,5), 1.5)
 AudioManager.play_sound3D("your_audio_resource_name", Vector3(10,5,80), 1.5)
 ```
+
+### Screenshot
+![AudioManager tab screenshoot](https://github.com/AwitaGames/AudioManager/blob/65c2a306a5636fa4ff90af48bde105ee66c8cf8b/screenshot.png)
