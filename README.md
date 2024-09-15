@@ -33,11 +33,13 @@ AudioManager.play2D("your_audio_resource_name", Vector2(10,5))
 
 # Play a sound with a 3D position
 # play_sound3D(audio_name:String, world_pos: Vector3, delay:float = 0.0)
-AudioManager.play2D("your_audio_resource_name", Vector3(10,5,80))
+AudioManager.play3D("your_audio_resource_name", Vector3(10,5,80))
 ```
 
 #### Play delayed
 All functions has the last parameter set to delay, to play the sound after X seconds
 ```gdscript
 AudioManager.play("your_audio_resource_name", 1.5)
+AudioManager.play2D("your_audio_resource_name", Vector2(10,5), 1.5)
+AudioManager.play3D("your_audio_resource_name", Vector3(10,5,80), 1.5)
 ```
