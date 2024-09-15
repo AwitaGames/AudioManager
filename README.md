@@ -25,21 +25,21 @@ Use the interface generated, accessible from the top tabs with name **AudioManag
 ```gdscript
 # Play a sound without any world position
 # play_sound(audio_name:String, delay:float = 0.0)
-AudioManager.play("your_audio_resource_name")
+AudioManager.play_sound("your_audio_resource_name")
 
 # Play a sound with a 2D position
 # play_sound2D(audio_name:String, world_pos: Vector2, delay:float = 0.0)
-AudioManager.play2D("your_audio_resource_name", Vector2(10,5))
+AudioManager.play_sound2D("your_audio_resource_name", Vector2(10,5))
 
 # Play a sound with a 3D position
 # play_sound3D(audio_name:String, world_pos: Vector3, delay:float = 0.0)
-AudioManager.play3D("your_audio_resource_name", Vector3(10,5,80))
+AudioManager.play_sound3D("your_audio_resource_name", Vector3(10,5,80))
 ```
 
 #### Play delayed
 All functions has the last parameter set to delay, to play the sound after X seconds
 ```gdscript
-AudioManager.play("your_audio_resource_name", 1.5)
-AudioManager.play2D("your_audio_resource_name", Vector2(10,5), 1.5)
-AudioManager.play3D("your_audio_resource_name", Vector3(10,5,80), 1.5)
+AudioManager.play_sound("your_audio_resource_name", 1.5)
+AudioManager.play_sound2D("your_audio_resource_name", Vector2(10,5), 1.5)
+AudioManager.play_sound3D("your_audio_resource_name", Vector3(10,5,80), 1.5)
 ```
