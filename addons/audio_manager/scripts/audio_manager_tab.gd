@@ -26,16 +26,19 @@ var selected_audio_item:AudioItem:
 			settings_root.show()
 		else:
 			settings_root.hide()
+			
+func _get_audio_manager(): 
+	return EditorInterface.get_editor_main_screen().get_node("/root/AudioManager") 
 
 func _ready():
 	settings_root.hide()
-	default_folder_path.text = AudioManager.sounds_folder
+	default_folder_path.text = _get_audio_manager().sounds_folder
 
 func on_show_audiomanager_window():
 	refresh_audiomanager_tab()
 
 func refresh_audiomanager_tab():
-	var file_list:Array[AudioItem] = AudioManager.get_all_audio_settings()
+	var file_list:Array[AudioItem] = _get_audio_manager().get_all_audio_settings()
 	var child_list:Array[Node] = button_list_root.get_children()
 	
 	button_list_root.clear()
@@ -67,7 +70,7 @@ func save_selected_audio():
 
 func _on_audio_item_list_item_selected(index):
 	var selected_item = button_list_root.get_item_text(index)
-	selected_audio_item = AudioManager.get_audio_item(selected_item)
+	selected_audio_item = _get_audio_manager().get_audio_item(selected_item)
 	refresh_from_selected()
 
 func _on_volume_slider_value_changed(value):
@@ -124,7 +127,7 @@ func _on_file_name_text_submitted(new_text):
 	ResourceSaver.save(selected_audio_item, new_file_path)
 
 	DirAccess.remove_absolute(old_file_path)
-	AudioManager.refresh_folders()
+	_get_audio_manager().refresh_folders()
 	refresh_audiomanager_tab()
 	
 func validate_file_name(file_name:String) -> String:
@@ -169,7 +172,7 @@ func _on_button_button_down():
 	
 func on_confirm_file_deletion():
 	DirAccess.remove_absolute(selected_audio_item.resource_path)
-	AudioManager.refresh_folders()
+	_get_audio_manager().refresh_folders()
 	refresh_audiomanager_tab()
 	
 	if file_list.item_count > 0:
@@ -179,7 +182,7 @@ func on_confirm_file_deletion():
 
 
 func _on_filter_text_changed(new_text:String):
-	var current_files = AudioManager.sound_list
+	var current_files = _get_audio_manager().sound_list
 	button_list_root.clear()
 	for f in current_files:
 		if f.name.to_lower().contains(new_text.to_lower()) or new_text.dedent() == "":
