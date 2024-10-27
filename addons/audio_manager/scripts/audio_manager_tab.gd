@@ -124,7 +124,7 @@ func _on_file_name_text_submitted(new_text):
 	ResourceSaver.save(selected_audio_item, new_file_path)
 
 	DirAccess.remove_absolute(old_file_path)
-	AudioManagerTools.refresh_folders()
+	AudioManager.refresh_folders()
 	refresh_audiomanager_tab()
 	
 func validate_file_name(file_name:String) -> String:
@@ -169,7 +169,7 @@ func _on_button_button_down():
 	
 func on_confirm_file_deletion():
 	DirAccess.remove_absolute(selected_audio_item.resource_path)
-	AudioManagerTools.refresh_folders()
+	AudioManager.refresh_folders()
 	refresh_audiomanager_tab()
 	
 	if file_list.item_count > 0:

@@ -7,7 +7,6 @@ var _audiomanager_main : AudioManagerTab = null
 
 func _enter_tree():
 	# We load first the Tools since they're needed for AudioManager
-	add_autoload_singleton("AudioManagerTools", "res://addons/audio_manager/AudioManagerTools.gd")
 	add_autoload_singleton("AudioManager", "res://addons/audio_manager/AudioManager.gd")
 	_audiomanager_main = SettingsWindowMain.instantiate()
 	_audiomanager_main.name = "AudioManager"

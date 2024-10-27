@@ -85,7 +85,7 @@ static func _get_all_files(path: String, file_ext := "", files:Array[String] = [
 	if Engine.is_editor_hint():
 		if !DirAccess.dir_exists_absolute(path):
 			DirAccess.make_dir_absolute(path)
-			AudioManagerTools.refresh_folders()
+			refresh_folders()
 
 	var dir = DirAccess.open(path)
 	
@@ -110,3 +110,8 @@ static func _get_all_files(path: String, file_ext := "", files:Array[String] = [
 		file_name = dir.get_next()
 	
 	return files
+	
+static func refresh_folders():
+	if Engine.is_editor_hint():
+		var editor_interface := Engine.get_singleton("EditorInterface")
+		editor_interface.get_resource_filesystem().scan()
