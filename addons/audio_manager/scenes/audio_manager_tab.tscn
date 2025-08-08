@@ -1,6 +1,7 @@
-[gd_scene load_steps=14 format=3 uid="uid://cn4gtgklteei7"]
+[gd_scene load_steps=15 format=3 uid="uid://cn4gtgklteei7"]
 
-[ext_resource type="Script" path="res://addons/audio_manager/scripts/audio_manager_tab.gd" id="1_f7ndv"]
+[ext_resource type="Script" uid="uid://b0roeh1bgrjx8" path="res://addons/audio_manager/scripts/audio_manager_tab.gd" id="1_f7ndv"]
+[ext_resource type="Script" uid="uid://wsxfc6j3wutk" path="res://addons/audio_manager/scripts/audio_item_edit.gd" id="2_xio13"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wiyku"]
 content_margin_left = 10.0
@@ -52,7 +53,7 @@ font_size = 18
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ouxig"]
 
-[node name="AudioManagerTab" type="Control" node_paths=PackedStringArray("button_list_root", "create_input", "default_folder_path", "settings_root", "file_name_field", "volume_slider", "pitch_slider", "random_pitch_slider", "file_list", "add_file_dialog", "select_folder_dialog")]
+[node name="AudioManagerTab" type="Control" node_paths=PackedStringArray("button_list_root", "create_input", "default_folder_path", "settings_root", "file_name_field", "volume_slider", "pitch_slider", "random_pitch_slider", "file_list", "add_file_dialog", "select_folder_dialog", "audio_item_editor")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -73,6 +74,7 @@ random_pitch_slider = NodePath("ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor
 file_list = NodePath("ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer2/VBoxContainer2/VScrollBar/ItemList")
 add_file_dialog = NodePath("FileDialog")
 select_folder_dialog = NodePath("FolderDialog")
+audio_item_editor = NodePath("ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor")
 
 [node name="FileDialog" type="FileDialog" parent="."]
 title = "Open File(s)"
@@ -83,7 +85,7 @@ filters = PackedStringArray("*.mp3", "*.ogg", "*.wav")
 [node name="FolderDialog" type="FileDialog" parent="."]
 auto_translate_mode = 1
 title = "Open a Directory"
-size = Vector2i(207, 175)
+size = Vector2i(220, 175)
 ok_button_text = "Select Current Folder"
 file_mode = 2
 
@@ -166,6 +168,7 @@ layout_mode = 2
 [node name="DefaultFolderPath" type="LineEdit" parent="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/WorkingFolderBlock/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
+text = "res://sounds"
 editable = false
 
 [node name="ChangeFolderPath" type="Button" parent="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/WorkingFolderBlock/HBoxContainer2"]
@@ -245,10 +248,18 @@ allow_reselect = true
 auto_height = true
 fixed_icon_size = Vector2i(15, 15)
 
-[node name="AudioEditor" type="PanelContainer" parent="ROOT/VBoxContainer/TAB/HBoxContainer"]
+[node name="AudioEditor" type="PanelContainer" parent="ROOT/VBoxContainer/TAB/HBoxContainer" node_paths=PackedStringArray("settings_root", "file_name_field", "volume_slider", "pitch_slider", "random_pitch_slider", "file_list", "add_file_dialog")]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxEmpty_8tlml")
+script = ExtResource("2_xio13")
+settings_root = NodePath("VBoxContainer/SettingsRoot")
+file_name_field = NodePath("VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/FileName")
+volume_slider = NodePath("VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/VolumeSlider")
+pitch_slider = NodePath("VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/PitchSlider")
+random_pitch_slider = NodePath("VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/RandomPitchSlider")
+file_list = NodePath("VBoxContainer/SettingsRoot/PanelContainer2/VBoxContainer2/VScrollBar/ItemList")
+add_file_dialog = NodePath("../../../../../FileDialog")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor"]
 layout_mode = 2
@@ -265,6 +276,7 @@ label_settings = SubResource("LabelSettings_8yqbl")
 horizontal_alignment = 1
 
 [node name="SettingsRoot" type="HBoxContainer" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer"]
+visible = false
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -380,16 +392,16 @@ item_2/text = "asd"
 item_3/text = "asd"
 item_4/text = "asd"
 
-[connection signal="files_selected" from="FileDialog" to="." method="_on_file_dialog_files_selected"]
+[connection signal="files_selected" from="FileDialog" to="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor" method="_on_file_dialog_files_selected"]
 [connection signal="dir_selected" from="FolderDialog" to="." method="_on_folder_dialog_dir_selected"]
 [connection signal="pressed" from="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/WorkingFolderBlock/HBoxContainer2/ChangeFolderPath" to="." method="_on_change_folder_path_pressed"]
 [connection signal="button_down" from="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/NewAudioItemBlock/HBoxContainer/CreateFileButton" to="." method="_on_create_file_button_button_down"]
 [connection signal="text_changed" from="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/AudioItemListBlock/Filter" to="." method="_on_filter_text_changed"]
 [connection signal="item_selected" from="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/AudioItemListBlock/ScrollContainer/AudioItemList" to="." method="_on_audio_item_list_item_selected"]
-[connection signal="text_submitted" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/FileName" to="." method="_on_file_name_text_submitted"]
-[connection signal="value_changed" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/VolumeSlider" to="." method="_on_volume_slider_value_changed"]
-[connection signal="value_changed" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/PitchSlider" to="." method="_on_pitch_slider_value_changed"]
-[connection signal="value_changed" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/RandomPitchSlider" to="." method="_on_random_pitch_slider_value_changed"]
-[connection signal="button_down" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/DeleteItemButton" to="." method="_on_button_button_down"]
-[connection signal="button_down" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer2/VBoxContainer2/HBoxContainer/DeleteSelectedFile" to="." method="_on_delete_selected_file_button_down"]
-[connection signal="button_down" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer2/VBoxContainer2/HBoxContainer/AddFile" to="." method="_on_add_file_button_down"]
+[connection signal="text_submitted" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/FileName" to="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor" method="_on_file_name_text_submitted"]
+[connection signal="value_changed" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/VolumeSlider" to="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor" method="_on_volume_slider_value_changed"]
+[connection signal="value_changed" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/PitchSlider" to="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor" method="_on_pitch_slider_value_changed"]
+[connection signal="value_changed" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/RandomPitchSlider" to="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor" method="_on_random_pitch_slider_value_changed"]
+[connection signal="button_down" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/DeleteItemButton" to="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor" method="_on_delete_item_button_button_down"]
+[connection signal="button_down" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer2/VBoxContainer2/HBoxContainer/DeleteSelectedFile" to="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor" method="_on_delete_selected_file_button_down"]
+[connection signal="button_down" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer2/VBoxContainer2/HBoxContainer/AddFile" to="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor" method="_on_add_file_button_down"]
