@@ -1,7 +1,9 @@
-[gd_scene load_steps=15 format=3 uid="uid://cn4gtgklteei7"]
+[gd_scene load_steps=17 format=3 uid="uid://cn4gtgklteei7"]
 
 [ext_resource type="Script" uid="uid://b0roeh1bgrjx8" path="res://addons/audio_manager/scripts/audio_manager_tab.gd" id="1_f7ndv"]
+[ext_resource type="Script" uid="uid://cpafffo0tn3jq" path="res://addons/audio_manager/AudioManager.gd" id="2_qxxu6"]
 [ext_resource type="Script" uid="uid://wsxfc6j3wutk" path="res://addons/audio_manager/scripts/audio_item_edit.gd" id="2_xio13"]
+[ext_resource type="PackedScene" uid="uid://dux31y2fvvtf8" path="res://addons/audio_manager/scenes/audio_pool_item.tscn" id="3_8ykva"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wiyku"]
 content_margin_left = 10.0
@@ -53,7 +55,7 @@ font_size = 18
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ouxig"]
 
-[node name="AudioManagerTab" type="Control" node_paths=PackedStringArray("button_list_root", "create_input", "default_folder_path", "settings_root", "file_name_field", "volume_slider", "pitch_slider", "random_pitch_slider", "file_list", "add_file_dialog", "select_folder_dialog", "audio_item_editor")]
+[node name="AudioManagerTab" type="Control" node_paths=PackedStringArray("audio_manager", "editor_audio_pool_item", "button_list_root", "create_input", "default_folder_path", "settings_root", "file_name_field", "volume_slider", "pitch_slider", "random_pitch_slider", "file_list", "add_file_dialog", "select_folder_dialog", "audio_item_editor")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -63,18 +65,25 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_f7ndv")
+audio_manager = NodePath("AudioManager")
+editor_audio_pool_item = NodePath("EditorAudioPoolItem")
 button_list_root = NodePath("ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/AudioItemListBlock/ScrollContainer/AudioItemList")
 create_input = NodePath("ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/NewAudioItemBlock/HBoxContainer/CreateLineEdit")
 default_folder_path = NodePath("ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/WorkingFolderBlock/HBoxContainer2/DefaultFolderPath")
 settings_root = NodePath("ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot")
 file_name_field = NodePath("ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/FileName")
-volume_slider = NodePath("ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/VolumeSlider")
-pitch_slider = NodePath("ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/PitchSlider")
-random_pitch_slider = NodePath("ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/RandomPitchSlider")
+volume_slider = NodePath("ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/HBoxContainer/VolumeSlider")
+pitch_slider = NodePath("ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/HBoxContainer2/PitchSlider")
+random_pitch_slider = NodePath("ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/HBoxContainer3/RandomPitchSlider")
 file_list = NodePath("ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer2/VBoxContainer2/VScrollBar/ItemList")
 add_file_dialog = NodePath("FileDialog")
 select_folder_dialog = NodePath("FolderDialog")
 audio_item_editor = NodePath("ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor")
+
+[node name="AudioManager" type="Node" parent="."]
+script = ExtResource("2_qxxu6")
+
+[node name="EditorAudioPoolItem" parent="." instance=ExtResource("3_8ykva")]
 
 [node name="FileDialog" type="FileDialog" parent="."]
 title = "Open File(s)"
@@ -85,7 +94,7 @@ filters = PackedStringArray("*.mp3", "*.ogg", "*.wav")
 [node name="FolderDialog" type="FileDialog" parent="."]
 auto_translate_mode = 1
 title = "Open a Directory"
-size = Vector2i(220, 175)
+size = Vector2i(348, 175)
 ok_button_text = "Select Current Folder"
 file_mode = 2
 
@@ -168,7 +177,7 @@ layout_mode = 2
 [node name="DefaultFolderPath" type="LineEdit" parent="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/WorkingFolderBlock/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "res://sounds"
+text = "res://resources/audio_items"
 editable = false
 
 [node name="ChangeFolderPath" type="Button" parent="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/WorkingFolderBlock/HBoxContainer2"]
@@ -248,16 +257,20 @@ allow_reselect = true
 auto_height = true
 fixed_icon_size = Vector2i(15, 15)
 
-[node name="AudioEditor" type="PanelContainer" parent="ROOT/VBoxContainer/TAB/HBoxContainer" node_paths=PackedStringArray("settings_root", "file_name_field", "volume_slider", "pitch_slider", "random_pitch_slider", "file_list", "add_file_dialog")]
+[node name="AudioEditor" type="PanelContainer" parent="ROOT/VBoxContainer/TAB/HBoxContainer" node_paths=PackedStringArray("settings_root", "file_name_field", "volume_slider", "volume_value_label", "pitch_slider", "pitch_value_label", "random_pitch_slider", "random_pitch_value_label", "audio_bus_selector", "file_list", "add_file_dialog")]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxEmpty_8tlml")
 script = ExtResource("2_xio13")
 settings_root = NodePath("VBoxContainer/SettingsRoot")
 file_name_field = NodePath("VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/FileName")
-volume_slider = NodePath("VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/VolumeSlider")
-pitch_slider = NodePath("VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/PitchSlider")
-random_pitch_slider = NodePath("VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/RandomPitchSlider")
+volume_slider = NodePath("VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/HBoxContainer/VolumeSlider")
+volume_value_label = NodePath("VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/HBoxContainer/VolumeValueLabel")
+pitch_slider = NodePath("VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/HBoxContainer2/PitchSlider")
+pitch_value_label = NodePath("VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/HBoxContainer2/PitchValueLabel")
+random_pitch_slider = NodePath("VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/HBoxContainer3/RandomPitchSlider")
+random_pitch_value_label = NodePath("VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/HBoxContainer3/RandomPitchValueLabel")
+audio_bus_selector = NodePath("VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/AudioBusSelector")
 file_list = NodePath("VBoxContainer/SettingsRoot/PanelContainer2/VBoxContainer2/VScrollBar/ItemList")
 add_file_dialog = NodePath("../../../../../FileDialog")
 
@@ -276,7 +289,6 @@ label_settings = SubResource("LabelSettings_8yqbl")
 horizontal_alignment = 1
 
 [node name="SettingsRoot" type="HBoxContainer" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer"]
-visible = false
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -313,34 +325,92 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_ouxig")
 layout_mode = 2
 text = "Volume"
 
-[node name="VolumeSlider" type="HSlider" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
 layout_mode = 2
-max_value = 1.0
+
+[node name="VolumeSlider" type="HSlider" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 2.0
 step = 0.01
+
+[node name="VolumeValueLabel" type="Label" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
 
 [node name="Label2" type="Label" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
 layout_mode = 2
 text = "Default Pitch"
 
-[node name="PitchSlider" type="HSlider" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
 layout_mode = 2
-max_value = 1.0
+
+[node name="PitchSlider" type="HSlider" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 2.0
 step = 0.01
+
+[node name="PitchValueLabel" type="Label" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
 
 [node name="Label3" type="Label" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
 layout_mode = 2
 text = "Random Pitch"
 
-[node name="RandomPitchSlider" type="HSlider" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
+[node name="Label9" type="Label" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Example: If set to 0.25, and default pitch is set to 1.0, will play with a random variation from 0.75 to 1.25"
+autowrap_mode = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="RandomPitchSlider" type="HSlider" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
 max_value = 1.0
 step = 0.01
+
+[node name="RandomPitchValueLabel" type="Label" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/HBoxContainer3"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+
+[node name="Label7" type="Label" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Audio bus"
+
+[node name="Label10" type="Label" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "The audio bus to play this audio. Defaults to Master."
+autowrap_mode = 2
+
+[node name="AudioBusSelector" type="OptionButton" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HSeparator3" type="HSeparator" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+theme_override_styles/separator = SubResource("StyleBoxEmpty_ouxig")
 
 [node name="Label6" type="Label" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 8
 text = "Actions"
 label_settings = SubResource("LabelSettings_qb7l2")
+
+[node name="PlayItemButton" type="Button" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+text = "Play"
+
+[node name="HSeparator2" type="HSeparator" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+theme_override_styles/separator = SubResource("StyleBoxEmpty_ouxig")
 
 [node name="DeleteItemButton" type="Button" parent="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer"]
 layout_mode = 2
@@ -399,9 +469,11 @@ item_4/text = "asd"
 [connection signal="text_changed" from="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/AudioItemListBlock/Filter" to="." method="_on_filter_text_changed"]
 [connection signal="item_selected" from="ROOT/VBoxContainer/TAB/HBoxContainer/ItemManagerRoot/AudioItemListBlock/ScrollContainer/AudioItemList" to="." method="_on_audio_item_list_item_selected"]
 [connection signal="text_submitted" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/FileName" to="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor" method="_on_file_name_text_submitted"]
-[connection signal="value_changed" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/VolumeSlider" to="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor" method="_on_volume_slider_value_changed"]
-[connection signal="value_changed" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/PitchSlider" to="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor" method="_on_pitch_slider_value_changed"]
-[connection signal="value_changed" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/RandomPitchSlider" to="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor" method="_on_random_pitch_slider_value_changed"]
+[connection signal="value_changed" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/HBoxContainer/VolumeSlider" to="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor" method="_on_volume_slider_value_changed"]
+[connection signal="value_changed" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/HBoxContainer2/PitchSlider" to="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor" method="_on_pitch_slider_value_changed"]
+[connection signal="value_changed" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/HBoxContainer3/RandomPitchSlider" to="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor" method="_on_random_pitch_slider_value_changed"]
+[connection signal="item_selected" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/AudioBusSelector" to="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor" method="_on_audio_bus_selector_item_selected"]
+[connection signal="pressed" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/PlayItemButton" to="." method="_on_play_item_button_pressed"]
 [connection signal="button_down" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer/VBoxContainer/DeleteItemButton" to="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor" method="_on_delete_item_button_button_down"]
 [connection signal="button_down" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer2/VBoxContainer2/HBoxContainer/DeleteSelectedFile" to="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor" method="_on_delete_selected_file_button_down"]
 [connection signal="button_down" from="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor/VBoxContainer/SettingsRoot/PanelContainer2/VBoxContainer2/HBoxContainer/AddFile" to="ROOT/VBoxContainer/TAB/HBoxContainer/AudioEditor" method="_on_add_file_button_down"]

@@ -1,13 +1,14 @@
 [gd_scene load_steps=2 format=3 uid="uid://dux31y2fvvtf8"]
 
-[ext_resource type="Script" path="res://addons/audio_manager/scripts/2D_audio_pool_item.gd" id="1_radcr"]
+[ext_resource type="Script" uid="uid://d3ghbe3rdko5w" path="res://addons/audio_manager/scripts/2D_audio_pool_item.gd" id="1_radcr"]
 
-[node name="audio_pool_item" type="Node" node_paths=PackedStringArray("player_normal", "player_2D", "player_3D", "timer")]
+[node name="audio_pool_item" type="Node" node_paths=PackedStringArray("player_normal", "player_2D", "player_3D", "play_timer", "finish_timer")]
 script = ExtResource("1_radcr")
 player_normal = NodePath("AudioStreamPlayer")
 player_2D = NodePath("AudioStreamPlayer2D")
 player_3D = NodePath("AudioStreamPlayer3D")
-timer = NodePath("Timer")
+play_timer = NodePath("PlayTimer")
+finish_timer = NodePath("FinishTimer")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 
@@ -15,8 +16,13 @@ timer = NodePath("Timer")
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
 
-[node name="Timer" type="Timer" parent="."]
+[node name="PlayTimer" type="Timer" parent="."]
 wait_time = 0.001
 one_shot = true
 
-[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[node name="FinishTimer" type="Timer" parent="."]
+wait_time = 0.001
+one_shot = true
+
+[connection signal="timeout" from="PlayTimer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="FinishTimer" to="." method="_on_timer_timeout"]

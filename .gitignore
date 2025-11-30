@@ -6,3 +6,5 @@
 !addons/audio_manager/**
 **/*.uid
 addons/audio_manager/assets/audio_icon.png.import
+addons/audio_manager/user_settings.tres
+*/*.import

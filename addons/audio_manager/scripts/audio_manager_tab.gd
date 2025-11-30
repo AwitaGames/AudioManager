@@ -2,7 +2,12 @@
 extends Control
 class_name AudioManagerTab
 
+const USER_SETTINGS_PATH = "res://addons/audio_manager/user_settings.tres"
+
 var default_icon = load("res://addons/audio_manager/assets/audio_icon.png")
+
+@export var audio_manager : AudioManager
+@export var editor_audio_pool_item : AudioPoolItem2D
 
 @export var button_list_root:ItemList
 @export var button_scene:PackedScene = preload("res://addons/audio_manager/scenes/audio_item_button.tscn")
@@ -20,35 +25,52 @@ var default_icon = load("res://addons/audio_manager/assets/audio_icon.png")
 @export var select_folder_dialog:FileDialog
 
 @export var audio_item_editor:AudioItemEditor
-
-
-func _get_audio_manager(): 
-	return get_node("/root/AudioManager")
+var audio_manager_settings: AudioManagerSettings
+	
+func _enter_tree() -> void:
+	load_user_settings()
 
 func _ready():
 	settings_root.hide()
-	default_folder_path.text = _get_audio_manager().sounds_folder
-	verify_folder_path()
+	default_folder_path.text = audio_manager_settings.default_folder
 	audio_item_editor.set_up(self)
+
+func _process(delta: float) -> void:
+	pass
 
 func on_show_audiomanager_window():
 	refresh_audiomanager_tab()
+
+# 
+#
+# Data Management
+#
+#
+func load_user_settings():
+	if ResourceLoader.exists(USER_SETTINGS_PATH):
+		audio_manager_settings = ResourceLoader.load(USER_SETTINGS_PATH)
+	else:
+		audio_manager_settings = AudioManagerSettings.new()
+		ResourceSaver.save(audio_manager_settings, USER_SETTINGS_PATH)
+		
+func save_user_settings():
+	ResourceSaver.save(audio_manager_settings, USER_SETTINGS_PATH)
 
 #
 #
 # UTILS
 #
 #
-func verify_folder_path():
-	var dir_path := default_folder_path.text
-	if not DirAccess.dir_exists_absolute(dir_path):
-		var err := DirAccess.make_dir_recursive_absolute(dir_path)
+func verify_folder_path(path:String):
+	if not DirAccess.dir_exists_absolute(path):
+		var err := DirAccess.make_dir_recursive_absolute(path)
 		if err != OK:
-			push_error("Cannot create folder: %s" % dir_path)
-			return err
-			
+			push_error("Cannot create folder: %s" % path)
+			return false
+		return true
+		
 func refresh_audiomanager_tab():
-	var file_list:Array[AudioItem] = _get_audio_manager().get_all_audio_settings()
+	var file_list:Array[AudioItem] = audio_manager.get_all_audio_settings()
 	var child_list:Array[Node] = button_list_root.get_children()
 	
 	button_list_root.clear()
@@ -95,25 +117,17 @@ func create_new_audio_item(file_path:String):
 	refresh()
 	audio_item_editor.select_file(file_path)
 
-func rename_file(audio_item:AudioItem, old_path:String, new_path:String):
-	var new_audio_item := audio_item
-	new_audio_item.resource_path = new_path
-	ResourceSaver.save(new_audio_item, new_path)
-	delete_audio_item(old_path)
-	refresh()
+func _on_play_item_button_pressed() -> void:
+	var selected_audio_item := audio_item_editor.get_selected_audio_item()
+	if selected_audio_item:
+		editor_audio_pool_item.play_audio(selected_audio_item)
 
-func save_audio_item(audio_item:AudioItem):
-	ResourceSaver.save(audio_item, audio_item.resource_path)
-	audio_item_editor.refresh()
-	
 func delete_audio_item(file_path:String):
 	# Remove from memory
 	audio_item_editor.deselect()
 	EditorInterface.edit_resource(Resource.new())
-	
 	#Delete file
 	DirAccess.remove_absolute(file_path)
-	
 	#Refresh
 	refresh()
 
@@ -128,8 +142,11 @@ func _on_change_folder_path_pressed() -> void:
 	select_folder_dialog.popup_centered(Vector2(500,500))
 # On select folder change
 func _on_folder_dialog_dir_selected(dir: String) -> void:
-	default_folder_path.text = dir
-	verify_folder_path()
+	if verify_folder_path(dir):
+		audio_manager_settings.default_folder = dir
+		default_folder_path.text = audio_manager_settings.default_folder
+		save_user_settings()
+		_refresh_folders()
 	
 func _on_create_file_button_button_down():
 	var file_name = validate_file_name(create_input.text)
@@ -167,7 +184,7 @@ func _on_audio_item_list_item_selected(index):
 	audio_item_editor.select_file(button_list_root.get_item_metadata(index))
 
 func _on_filter_text_changed(new_text:String):
-	var current_files = _get_audio_manager().sound_list
+	var current_files = audio_manager.sound_list
 	button_list_root.clear()
 	for f in current_files:
 		if f.name.to_lower().contains(new_text.to_lower()) or new_text.dedent() == "":

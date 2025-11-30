@@ -1,10 +1,12 @@
+@tool
 extends Node
 class_name AudioPoolItem2D
 
 @export var player_normal:AudioStreamPlayer
 @export var player_2D:AudioStreamPlayer2D
 @export var player_3D:AudioStreamPlayer3D
-@export var timer:Timer
+@export var play_timer:Timer
+@export var finish_timer:Timer
 
 @export var is_busy:bool = false
 
@@ -31,31 +33,35 @@ func setup_audio(audio_stream, audio_item:AudioItem, delay: float):
 	
 	if len(audio_item.audio_files) == 0:
 		return
-		
-	is_busy = true
-		
-	timer.wait_time = delay + 0.01
-	timer.stop()
 	
+	# Set as busy
+	is_busy = true
+	
+	# Randomize file
 	var random_index = randi_range(0, len(audio_item.audio_files)-1)
 	audio_stream.stream = audio_item.audio_files[random_index]
-	audio_stream.volume_db = audio_item.volume
+	
+	# Set volume
+	var t := AudioStreamPlayer.new()
+	audio_stream.volume_linear = audio_item.volume
+	
+	# Set pitch
 	audio_stream.pitch_scale = audio_item.pitch_variation
 	if audio_item.pitch_random != 0:
 		audio_stream.pitch_scale += randf_range(-audio_item.pitch_random, audio_item.pitch_random )
-
-	var audio_length:float = audio_stream.stream.get_length()
 	
+	# Set finish timer
+	var audio_length:float = audio_stream.stream.get_length()
 	var finish_timer = get_tree().create_timer(audio_length + 0.5)
 	
 	finish_timer.timeout.connect(func():
 		is_busy = false
 	)
 	
-	if delay > 0.0:
-		timer.start()
-	else:
-		_on_timer_timeout()
+	play_timer.wait_time = delay + 0.001
+	play_timer.stop()
+	
+	play_timer.start()
 
 func _on_timer_timeout():
 	current_player.play()

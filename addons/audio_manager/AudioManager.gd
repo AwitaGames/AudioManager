@@ -71,7 +71,7 @@ static func get_all_audio_settings() -> Array[AudioItem]:
 	var sound_list_raw:Array[String] = _get_all_files("res://", "tres")
 	
 	for file_path in sound_list_raw:
-		var res:Resource = load(file_path) 
+		var res:Resource = ResourceLoader.load(file_path, "", ResourceLoader.CACHE_MODE_REPLACE_DEEP) 
 
 		if res is AudioItem:
 			var resource_name = file_path.get_file().replace(".tres", "").replace(".remap", "")
